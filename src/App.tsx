@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import CertificateGenerator from "./pages/CertificateGenerator";
 import LinkedInGenerator from "./pages/LinkedInGenerator";
 import PortfolioGenerator from "./pages/PortfolioGenerator";
+import CustomizeResults from "./pages/CustomizeResults";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/portfolio-generator" element={<PortfolioGenerator />} />
             <Route path="/certificate-generator" element={<CertificateGenerator />} />
             <Route path="/excel-generator" element={<ExcelGenerator />} />
+            <Route path="/customize-results" element={<CustomizeResults />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
