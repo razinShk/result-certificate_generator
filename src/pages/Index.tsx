@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import ResultPreview from '@/components/ResultPreview';
 import AdvancedResultFeatures from '@/components/AdvancedResultFeatures';
 import BulkResultPreview from '@/components/BulkResultPreview';
+import BulkGeneration from '@/components/BulkGeneration';
 import { handlePrint } from '@/utils/printUtils';
 
 interface Subject {
@@ -46,6 +47,65 @@ interface IndexProps {
 }
 
 const Index = ({ universityContext }: IndexProps) => {
+  const universityData = [
+    {
+      id: 'sppu',
+      name: 'Savitribai Phule Pune University',
+      city: 'Pune',
+      state: 'Maharashtra',
+      shortName: 'SPPU',
+      color: 'bg-blue-600'
+    },
+    {
+      id: 'mu',
+      name: 'University of Mumbai',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      shortName: 'MU',
+      color: 'bg-purple-600'
+    },
+    {
+      id: 'du',
+      name: 'University of Delhi',
+      city: 'Delhi',
+      state: 'Delhi',
+      shortName: 'DU',
+      color: 'bg-green-600'
+    },
+    {
+      id: 'jnu',
+      name: 'Jawaharlal Nehru University',
+      city: 'Delhi',
+      state: 'Delhi',
+      shortName: 'JNU',
+      color: 'bg-red-600'
+    },
+    {
+      id: 'cu',
+      name: 'University of Calcutta',
+      city: 'Kolkata',
+      state: 'West Bengal',
+      shortName: 'CU',
+      color: 'bg-orange-600'
+    },
+    {
+      id: 'au',
+      name: 'Anna University',
+      city: 'Chennai',
+      state: 'Tamil Nadu',
+      shortName: 'AU',
+      color: 'bg-teal-600'
+    },
+    {
+      id: 'impact',
+      name: 'Impact School',
+      city: 'Lagos',
+      state: 'Lagos',
+      shortName: 'IMPACT',
+      color: 'bg-indigo-600'
+    }
+  ];
+
   const [studentInfo, setStudentInfo] = useState<StudentInfo>({
     name: '',
     motherName: '',
@@ -80,6 +140,7 @@ const Index = ({ universityContext }: IndexProps) => {
   const [savedTemplates, setSavedTemplates] = useState<string[]>([]);
   const [advancedFeatures, setAdvancedFeatures] = useState<any>({});
   const [bulkStudents, setBulkStudents] = useState<any[]>([]);
+  const [showUniversitySelection, setShowUniversitySelection] = useState(false);
 
   const addSubject = () => {
     const newSubject: Subject = {
@@ -294,6 +355,14 @@ const Index = ({ universityContext }: IndexProps) => {
     setAdvancedFeatures(prev => ({ ...prev, [feature]: value }));
   };
 
+  const handleUniversitySelect = (universityId: string) => {
+    const selectedUniversity = universityData.find(uni => uni.id === universityId);
+    if (selectedUniversity) {
+      // Navigate to the university-specific page
+      navigate(`/university/${universityId}`);
+    }
+  };
+
   // Get the page title based on context
   const getPageTitle = () => {
     if (universityContext) {
@@ -351,6 +420,15 @@ const Index = ({ universityContext }: IndexProps) => {
                   <Button onClick={handleResetForm} variant="outline" size="sm">
                     <RotateCcw className="h-4 w-4 mr-1" />
                     Reset Form
+                  </Button>
+                  <Button
+                    onClick={() => setShowUniversitySelection(!showUniversitySelection)}
+                    variant="outline"
+                    size="sm"
+                    className="border-purple-300 text-purple-600 hover:bg-purple-50"
+                  >
+                    <University className="h-4 w-4 mr-1" />
+                    {showUniversitySelection ? 'Hide Universities' : 'Choose University'}
                   </Button>
                 </div>
               </CardContent>
@@ -549,19 +627,66 @@ const Index = ({ universityContext }: IndexProps) => {
               </CardContent>
             </Card>
 
-            {/* Advanced Features */}
-            <AdvancedResultFeatures 
-              onFeatureChange={handleAdvancedFeatureChange}
-              onBulkDataGenerated={handleBulkDataGenerated}
-            />
+            {/* University Selection */}
+            {showUniversitySelection && (
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-blue-700">Choose University Format</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {universityData.map((university) => (
+                      <Card
+                        key={university.id}
+                        className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
+                        onClick={() => handleUniversitySelect(university.id)}
+                      >
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className={`w-12 h-12 ${university.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                              <span className="text-white font-bold">{university.shortName}</span>
+                            </div>
+                            <div>
+                              <h3 className="font-semibold group-hover:text-blue-600 transition-colors">{university.name}</h3>
+                              <p className="text-sm text-gray-600">{university.city}</p>
+                            </div>
+                          </div>
+                          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                            Select University
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="text-center mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowUniversitySelection(false)}
+                      className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                    >
+                      Close Selection
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Bulk Generation - Prominent placement */}
+            <BulkGeneration onBulkDataGenerated={handleBulkDataGenerated} />
 
             {/* Bulk Results Preview */}
             {bulkStudents.length > 0 && (
-              <BulkResultPreview 
+              <BulkResultPreview
                 bulkStudents={bulkStudents}
                 universityContext={universityContext}
               />
             )}
+
+            {/* Advanced Features */}
+            <AdvancedResultFeatures
+              onFeatureChange={handleAdvancedFeatureChange}
+            />
 
             {/* Results Summary */}
             <Card className="shadow-lg bg-gradient-to-r from-blue-50 to-indigo-50">

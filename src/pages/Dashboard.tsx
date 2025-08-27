@@ -356,16 +356,30 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Single CTA */}
-              <div className="text-center mt-8">
+              {/* Dual CTA Buttons */}
+              <div className="text-center mt-8 space-y-4">
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-12 py-4 text-xl shadow-xl hover:shadow-2xl transition-all duration-300 animate-pulse-slow"
                   onClick={() => navigate('/customize-results')}
                 >
-                  Start Generating Now
+                  Create for your school
                   <ArrowRight className="h-6 w-6 ml-3" />
                 </Button>
+                <div>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-12 py-4 text-xl transition-all duration-300"
+                    onClick={() => {
+                      const universitySection = document.getElementById('university-selection');
+                      universitySection?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Choose your school
+                    <University className="h-6 w-6 ml-3" />
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -533,7 +547,7 @@ const Dashboard = () => {
 
 
         {/* University Selection */}
-        <div className="text-center mb-8">
+        <div id="university-selection" className="text-center mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Choose University Format</h2>
           
           <div className="relative max-w-md mx-auto mb-8">

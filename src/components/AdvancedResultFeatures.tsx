@@ -8,16 +8,14 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, QrCode, Mail, BarChart3, FileImage, Lock, Zap, Users, Download, Upload, Info } from 'lucide-react';
+import { Shield, QrCode, Mail, BarChart3, FileImage, Lock, Zap } from 'lucide-react';
 import { toast } from 'sonner';
-import * as XLSX from 'xlsx';
 
 interface AdvancedFeaturesProps {
   onFeatureChange: (feature: string, value: any) => void;
-  onBulkDataGenerated?: (students: any[]) => void;
 }
 
-const AdvancedResultFeatures = ({ onFeatureChange, onBulkDataGenerated }: AdvancedFeaturesProps) => {
+const AdvancedResultFeatures = ({ onFeatureChange }: AdvancedFeaturesProps) => {
   const [features, setFeatures] = useState({
     digitalSignature: false,
     watermark: '',
@@ -26,13 +24,9 @@ const AdvancedResultFeatures = ({ onFeatureChange, onBulkDataGenerated }: Advanc
     password: '',
     emailIntegration: false,
     emailTemplate: 'Dear {{studentName}},\n\nYour result is now available. Please find your result sheet attached.\n\nRegards,\nExamination Department',
-    bulkGeneration: false,
     customGrading: 'standard',
     resultAnalytics: false
   });
-
-  const [bulkData, setBulkData] = useState<any[]>([]);
-  const [showBulkPreview, setShowBulkPreview] = useState(false);
 
   const updateFeature = (key: string, value: any) => {
     const updated = { ...features, [key]: value };
@@ -48,105 +42,7 @@ const AdvancedResultFeatures = ({ onFeatureChange, onBulkDataGenerated }: Advanc
     { value: 'custom', label: 'Custom Grading' }
   ];
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        
-        setBulkData(jsonData);
-        setShowBulkPreview(true);
-        onBulkDataGenerated?.(jsonData);
-        
-        toast.success(`Successfully loaded ${jsonData.length} student records!`);
-      } catch (error) {
-        toast.error('Error reading file. Please check the format and try again.');
-      }
-    };
-    
-    reader.readAsArrayBuffer(file);
-  };
-
-  const downloadSampleFile = () => {
-    const sampleData = [
-      {
-        'Student Name': 'JOHN DOE',
-        'Mother Name': 'JANE DOE',
-        'Seat No': '12345',
-        'PRN': '21012345678',
-        'College Name': 'SAMPLE COLLEGE OF ENGINEERING',
-        'Centre': '001',
-        'Branch': 'BACHELOR OF ENGINEERING',
-        'Subject1_Code': 'CS-101',
-        'Subject1_Name': 'DATA STRUCTURES',
-        'Subject1_Internal': 18,
-        'Subject1_External': 52,
-        'Subject1_Credits': 4,
-        'Subject2_Code': 'CS-102',
-        'Subject2_Name': 'ALGORITHMS',
-        'Subject2_Internal': 16,
-        'Subject2_External': 48,
-        'Subject2_Credits': 3,
-        'Subject3_Code': 'CS-103',
-        'Subject3_Name': 'DATABASE SYSTEMS',
-        'Subject3_Internal': 19,
-        'Subject3_External': 55,
-        'Subject3_Credits': 4
-      },
-      {
-        'Student Name': 'ALICE SMITH',
-        'Mother Name': 'MARY SMITH',
-        'Seat No': '12346',
-        'PRN': '21012345679',
-        'College Name': 'SAMPLE COLLEGE OF ENGINEERING',
-        'Centre': '001',
-        'Branch': 'BACHELOR OF ENGINEERING',
-        'Subject1_Code': 'CS-101',
-        'Subject1_Name': 'DATA STRUCTURES',
-        'Subject1_Internal': 20,
-        'Subject1_External': 58,
-        'Subject1_Credits': 4,
-        'Subject2_Code': 'CS-102',
-        'Subject2_Name': 'ALGORITHMS',
-        'Subject2_Internal': 18,
-        'Subject2_External': 52,
-        'Subject2_Credits': 3,
-        'Subject3_Code': 'CS-103',
-        'Subject3_Name': 'DATABASE SYSTEMS',
-        'Subject3_Internal': 17,
-        'Subject3_External': 49,
-        'Subject3_Credits': 4
-      }
-    ];
-
-    const ws = XLSX.utils.json_to_sheet(sampleData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Students');
-    XLSX.writeFile(wb, 'bulk_result_sample.xlsx');
-    
-    toast.success('Sample file downloaded! Use this format for bulk upload.');
-  };
-
-  const generateBulkResults = () => {
-    if (bulkData.length === 0) {
-      toast.error('Please upload student data first');
-      return;
-    }
-    
-    toast.success(`Processing ${bulkData.length} results... This may take a moment.`);
-    // Here you would typically process each student's result
-    // For now, we'll just show a success message
-    setTimeout(() => {
-      toast.success(`Successfully generated ${bulkData.length} result sheets!`);
-    }, 2000);
-  };
 
   return (
     <Card className="shadow-lg">
@@ -291,74 +187,6 @@ const AdvancedResultFeatures = ({ onFeatureChange, onBulkDataGenerated }: Advanc
 
           <TabsContent value="automation" className="space-y-4">
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-600" />
-                  <Label>Bulk Generation</Label>
-                </div>
-                <Switch
-                  checked={features.bulkGeneration}
-                  onCheckedChange={(checked) => updateFeature('bulkGeneration', checked)}
-                />
-              </div>
-
-              {features.bulkGeneration && (
-                <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
-                  <div className="flex items-start gap-2 mb-3">
-                    <Info className="h-4 w-4 text-blue-600 mt-0.5" />
-                    <div className="text-sm text-blue-800">
-                      <strong>How to use Bulk Generation:</strong>
-                      <ol className="list-decimal list-inside mt-2 space-y-1">
-                        <li>Download the sample Excel file below</li>
-                        <li>Fill in your student data following the exact format</li>
-                        <li>Upload the completed file</li>
-                        <li>Review the preview and generate all results</li>
-                      </ol>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex gap-2">
-                      <Button onClick={downloadSampleFile} variant="outline" size="sm">
-                        <Download className="h-4 w-4 mr-2" />
-                        Download Sample Format
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Upload Student Data (Excel/CSV)</Label>
-                      <Input 
-                        type="file" 
-                        accept=".csv,.xlsx,.xls" 
-                        onChange={handleFileUpload}
-                      />
-                      <div className="text-xs text-gray-600 space-y-1">
-                        <p><strong>Required columns:</strong></p>
-                        <p>• Student Name, Mother Name, Seat No, PRN, College Name</p>
-                        <p>• Subject1_Code, Subject1_Name, Subject1_Internal, Subject1_External, Subject1_Credits</p>
-                        <p>• Subject2_Code, Subject2_Name... (add more subjects as needed)</p>
-                        <p className="text-blue-600 font-medium">💡 Follow the exact column names from the sample file</p>
-                      </div>
-                    </div>
-
-                    {showBulkPreview && bulkData.length > 0 && (
-                      <div className="mt-4 p-3 bg-white rounded border">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-medium">Preview: {bulkData.length} students loaded</span>
-                          <Button onClick={generateBulkResults} size="sm">
-                            Generate All Results
-                          </Button>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          <p>First student: {bulkData[0]?.['Student Name'] || 'N/A'}</p>
-                          <p>Subjects detected: {Object.keys(bulkData[0] || {}).filter(key => key.includes('Subject')).length / 5}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-blue-600" />
