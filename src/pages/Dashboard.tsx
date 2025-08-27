@@ -366,7 +366,16 @@ const Dashboard = () => {
                   Create for your school
                   <ArrowRight className="h-6 w-6 ml-3" />
                 </Button>
-                <div>
+                <div className="flex justify-center gap-4">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-12 py-4 text-xl transition-all duration-300"
+                    onClick={() => navigate('/report-card-editor')}
+                  >
+                    <FileText className="h-6 w-6 mr-3" />
+                    Create Report Cards
+                  </Button>
                   <Button
                     size="lg"
                     variant="outline"

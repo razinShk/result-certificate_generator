@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { University, MessageCircle, Instagram, Twitter, FileSpreadsheet, Menu, X, User, Award, Briefcase, Zap, Download, Upload, Archive } from 'lucide-react';
+import { University, MessageCircle, Instagram, Twitter, FileSpreadsheet, Menu, X, User, Award, Briefcase, Zap, Download, Upload, Archive, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -9,6 +9,7 @@ const Navbar = () => {
 
   const navLinks = [
     { path: '/customize-results', label: 'Result Creator', icon: University },
+    { path: '/report-card-editor', label: 'Report Cards', icon: FileText },
     // { path: '/whatsapp-generator', label: 'WhatsApp Chat', icon: MessageCircle },
     // { path: '/instagram-generator', label: 'Instagram DM', icon: Instagram },
     { path: '/twitter-generator', label: 'Twitter Post', icon: Twitter },

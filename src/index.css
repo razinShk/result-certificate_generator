@@ -138,6 +138,36 @@
     animation: headingReveal 2s ease-in-out 3s forwards;
     opacity: 0;
   }
+
+  .animate-rainbow-gradient {
+    animation: rainbowGradient 3s ease infinite;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  @media print {
+    .page-break-before {
+      page-break-before: always;
+    }
+
+    .page-break-after {
+      page-break-after: always;
+    }
+
+    .page-break-avoid {
+      page-break-inside: avoid;
+    }
+  }
 }
 
 @keyframes float {
@@ -252,5 +282,19 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes rainbowGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }
