@@ -207,17 +207,24 @@ const Dashboard = () => {
                 </div>
               </div>
               
-              {/* Main Heading */}
-              <h1 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent animate-gradient relative">
-                Resulty
-                
-                {/* Data Flow Animation Overlay */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-ping opacity-40"></div>
-                  <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-purple-400 rounded-full animate-ping opacity-30" style={{animationDelay: '1s'}}></div>
-                  <div className="absolute top-1/2 left-2/3 w-1 h-1 bg-green-400 rounded-full animate-ping opacity-35" style={{animationDelay: '2s'}}></div>
+              {/* Sequential Animation: Background Text -> Main Heading */}
+              <div className="relative h-32 flex items-center justify-center">
+                {/* Step 1: Background text appears first */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-right transform -rotate-12 animate-fade-in-delayed">
+                    <div className="space-y-3">
+                      <div className="text-4xl font-bold text-blue-600">
+                        Save hours of work with
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </h1>
+
+                {/* Step 2: Main heading appears after background text */}
+                <h1 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent animate-gradient relative animate-heading-reveal">
+                  Resulty
+                </h1>
+              </div>
               
               {/* Bulk Processing Indicator */}
               <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
